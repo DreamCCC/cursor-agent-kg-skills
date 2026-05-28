@@ -12,7 +12,7 @@ For one `relation_code`, research authoritative sources, compare against existin
 The skill supports two primary modes:
 
 - `verify_existing_only`: verify existing triples only. Return `update_candidates`, `conflicts`, and `unchanged`; do not discover or return new triples.
-- `discover_missing`: discover missing triples only. Return `new_candidates` that are absent from both `published` and `pending_review`; do not propose updates for existing triples in this mode.
+- `discover_missing`: discover missing triples only. Return `new_candidates` that are absent from both `published` and `pending_review`; `update_candidates`, `conflicts`, and `unchanged_examples` must be empty in this mode.
 
 ## Required References
 
@@ -56,6 +56,7 @@ Read these before running:
    - In `verify_existing_only`, `update_candidates` are existing triples whose properties, description, evidence, or entity ids need improvement.
    - In `verify_existing_only`, `conflicts` are existing triples contradicted by stronger evidence or requiring human resolution.
    - `unchanged` contains existing triples verified with no action needed.
+   - In `discover_missing`, do not return `update_candidates`, `conflicts`, or `unchanged_examples`; existing-row observations may only be summarized in `self_check.notes` or `coverage.notes`.
    - Do not put the same triple in both `new_candidates` and `update_candidates`.
 
 6. Self-check.
@@ -78,6 +79,8 @@ Read these before running:
 - Do not use a relation if the evidence only implies it weakly.
 - Do not create duplicate triples that already exist in `published` or `pending_review`.
 - In `discover_missing`, skip existing triples instead of returning them as updates.
+- In `discover_missing`, never return `conflicts`; conflicts are only valid in `verify_existing_only`.
+- In `discover_missing`, never return `unchanged_examples`; unchanged examples are only valid in `verify_existing_only`.
 - In `verify_existing_only`, do not return `new_candidates`.
 - If no new triples are found, explain whether the empty result is source-exhaustive or only this run's search found nothing.
 - Do not hide missing endpoint entities; report them explicitly in candidate `entity_resolution`.

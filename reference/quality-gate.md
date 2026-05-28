@@ -18,6 +18,8 @@
 - `verify_existing_only` 中，强证据与现有事实矛盾进入 `conflicts`。
 - `discover_missing` 只输出 `published` 和 `pending_review` 中都不存在的新三元组。
 - `discover_missing` 中，如果发现已有三元组的更好证据，跳过该项，留给 `verify_existing_only`。
+- `discover_missing` 中，`update_candidates`、`conflicts`、`unchanged_examples` 必须为空数组。
+- `discover_missing` 中，已有关系的问题只能写入 `self_check.notes` 或 `coverage.notes`，不得作为候选返回。
 - `discover_missing` 返回空时，必须说明是 `source_exhaustive_empty` 还是 `search_exhausted_empty`。
 - 开放关系或不可完整枚举来源不得声明 `source_exhaustive`。
 
@@ -49,7 +51,7 @@
 
 ## 人工审核提示
 
-以下情况必须进入 `conflicts` 或 `update_candidates`，不得直接作为新增：
+以下情况在 `verify_existing_only` 中必须进入 `conflicts` 或 `update_candidates`，不得直接作为新增；在 `discover_missing` 中必须跳过，并只在 notes 中提示：
 
 - 多个来源互相矛盾。
 - 只有非权威来源支持。

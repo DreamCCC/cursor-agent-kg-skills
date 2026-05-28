@@ -118,7 +118,8 @@ Agent 最终只返回一个 JSON 对象，不要混入解释性正文。
 - `relation_type` must equal input `relation_code`.
 - `run_mode` must equal the input mode.
 - In `verify_existing_only`, `new_candidates` must be empty.
-- In `discover_missing`, `update_candidates` should be empty; existing triples with better evidence should be skipped and left for `verify_existing_only`.
+- In `discover_missing`, `update_candidates`, `conflicts`, and `unchanged_examples` must be empty arrays.
+- In `discover_missing`, existing triples with better evidence or contradictory evidence must be skipped and left for `verify_existing_only`; mention them only in `self_check.notes` or `coverage.notes`.
 - `new_candidates`, `update_candidates`, and `conflicts` together should respect `max_candidates` if that parameter is provided.
 - Entity types must match configured rules.
 - Both endpoint entities must include `entity_resolution`.
@@ -127,6 +128,6 @@ Agent 最终只返回一个 JSON 对象，不要混入解释性正文。
 - `source_url` must be the strongest source URL.
 - `original_sources` should include every supporting source used.
 - `confidence` range is `0.0` to `1.0`.
-- If confidence is below `0.75`, prefer `conflicts` or omit the candidate.
+- If confidence is below `0.75`, omit the candidate in `discover_missing`; in `verify_existing_only`, prefer `conflicts` or omit the item.
 - If no new candidates are returned in `discover_missing`, set `coverage.empty_reason` to `source_exhaustive_empty` or `search_exhausted_empty`.
 
