@@ -10,6 +10,12 @@
 Team -> Team
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` for teams whose complete franchise history pages or Basketball Reference franchise index entries are fully checked.
+- If only search snippets or partial history pages are available, coverage must be `partial`.
+- Do not infer predecessor relations from nickname similarity without explicit historical evidence.
+
 ## Scope
 
 - 适用于 franchise 历史沿革，如更名、迁移前的球队主体。

@@ -11,6 +11,16 @@
 - 已检查候选两端实体是否存在，匹配方式包括实体名、别名和外部 ID。
 - 新候选没有与现有实例重复。
 
+## 模式检查
+
+- `verify_existing_only` 只核验已有关系，不输出 `new_candidates`。
+- `verify_existing_only` 中，说明、属性、证据或实体 ID 补强进入 `update_candidates`。
+- `verify_existing_only` 中，强证据与现有事实矛盾进入 `conflicts`。
+- `discover_missing` 只输出 `published` 和 `pending_review` 中都不存在的新三元组。
+- `discover_missing` 中，如果发现已有三元组的更好证据，跳过该项，留给 `verify_existing_only`。
+- `discover_missing` 返回空时，必须说明是 `source_exhaustive_empty` 还是 `search_exhausted_empty`。
+- 开放关系或不可完整枚举来源不得声明 `source_exhaustive`。
+
 ## 证据检查
 
 - 每条候选至少有一个可访问来源 URL。
@@ -30,6 +40,8 @@
 
 - 输出是合法 JSON。
 - `relation_code` 与任务输入一致。
+- `run_mode` 与任务输入一致。
+- 输出包含 `coverage`，说明来源覆盖状态。
 - 每条候选包含实体类型、实体名称、关系类型、证据、置信度。
 - 每条候选包含 `entity_resolution`。
 - 缺失实体必须标记 `needs_create = true`，并提供 `create_suggestion`。

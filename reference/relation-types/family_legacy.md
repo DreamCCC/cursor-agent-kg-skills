@@ -10,6 +10,12 @@
 Player -> Player
 ```
 
+## Discovery Coverage
+
+- `discover_missing` should default to `partial` because family relations are open-ended and sources are not exhaustively enumerable.
+- A run may be source-exhaustive only for a bounded input player list whose authoritative profile pages were all checked.
+- Returning no candidates means this run found no more high-confidence relations, not that all NBA family relations are exhausted.
+
 ## Scope
 
 - 一期优先父子、兄弟、亲属中与 NBA 问答价值高的关系。

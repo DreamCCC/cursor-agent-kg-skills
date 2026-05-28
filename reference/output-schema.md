@@ -5,13 +5,26 @@ Agent 最终只返回一个 JSON 对象，不要混入解释性正文。
 ```json
 {
   "relation_code": "team_home_arena",
-  "run_mode": "discover_and_verify",
+  "run_mode": "discover_missing",
   "summary": {
     "existing_count": 0,
     "new_candidates": 0,
     "update_candidates": 0,
     "conflicts": 0,
     "unchanged": 0
+  },
+  "coverage": {
+    "status": "source_exhaustive",
+    "empty_reason": null,
+    "sources_checked": [
+      {
+        "url": "https://www.nba.com/...",
+        "title": "Example source title",
+        "coverage_scope": "Current NBA team arena list"
+      }
+    ],
+    "source_items_checked": 0,
+    "notes": []
   },
   "new_candidates": [
     {
@@ -103,6 +116,10 @@ Agent 最终只返回一个 JSON 对象，不要混入解释性正文。
 ## Candidate Rules
 
 - `relation_type` must equal input `relation_code`.
+- `run_mode` must equal the input mode.
+- In `verify_existing_only`, `new_candidates` must be empty.
+- In `discover_missing`, `update_candidates` should be empty; existing triples with better evidence should be skipped and left for `verify_existing_only`.
+- `new_candidates`, `update_candidates`, and `conflicts` together should respect `max_candidates` if that parameter is provided.
 - Entity types must match configured rules.
 - Both endpoint entities must include `entity_resolution`.
 - If an entity exists in `nba_ko_entity_tags`, include its `entity_id`.
@@ -111,4 +128,5 @@ Agent 最终只返回一个 JSON 对象，不要混入解释性正文。
 - `original_sources` should include every supporting source used.
 - `confidence` range is `0.0` to `1.0`.
 - If confidence is below `0.75`, prefer `conflicts` or omit the candidate.
+- If no new candidates are returned in `discover_missing`, set `coverage.empty_reason` to `source_exhaustive_empty` or `search_exhausted_empty`.
 

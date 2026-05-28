@@ -11,6 +11,12 @@ Player -> Award
 Team -> Award
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` only for explicitly bounded award pages, such as NBA official MVP, Finals MVP, champions, or Hall of Fame lists.
+- If the task asks for broad player honors without a fixed source list, coverage must be `partial`.
+- Do not claim exhaustive coverage for every possible honor across the open web.
+
 ## Scope
 
 一期只抽取重大荣誉：

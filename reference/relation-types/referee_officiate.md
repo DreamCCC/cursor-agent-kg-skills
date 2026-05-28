@@ -10,6 +10,12 @@
 Referee -> League
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` for a specific season and league when the official officials guide or official staff list is fully checked.
+- Do not use single-game assignments to claim a referee-list relation.
+- If the season or league is not bounded, coverage must be `partial`.
+
 ## Scope
 
 - 一期抽取官方裁判员名单关系，不抽取单场比赛执裁安排。

@@ -10,6 +10,11 @@
 Team -> Season
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` when the official NBA champions/history page is fully checked for the requested league scope.
+- Only NBA championship seasons are in scope for phase one; do not include conference or division titles.
+
 ## Scope
 
 - 一期只抽取 NBA 总冠军赛季。

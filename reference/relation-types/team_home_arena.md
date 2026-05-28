@@ -10,6 +10,12 @@
 Team -> Arena
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` for current active teams when the current NBA official team list and official arena/team pages are fully checked.
+- Do not assume a fixed team count; derive the source team set from current official sources.
+- Historical home arenas are not source-exhaustive in phase one unless the task provides a bounded franchise history source set.
+
 ## Scope
 
 - 优先抽取当前 NBA 官方球队列表中的 active teams 主场馆。

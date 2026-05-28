@@ -10,6 +10,11 @@
 Arena -> City
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` only for a bounded arena set, such as arenas already linked from `team_home_arena` or a fully checked official arena list.
+- Do not claim exhaustive coverage for all possible historical or non-current arenas unless the input source set is explicitly bounded.
+
 ## Scope
 
 - 抽取 NBA 球队主场馆所在城市。

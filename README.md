@@ -25,6 +25,13 @@ cursor-agent-kg-skills/
 3. 每次任务传入一个 `relation_code`，例如 `team_home_arena` 或 `retired_number`。
 4. agent 默认只输出候选结果，不直接发布数据。
 
+## 运行模式
+
+- `verify_existing_only`：只检查已有关系是否仍然有效，以及说明、属性、来源或实体 ID 是否需要补强。适合按已有关系实例分批运行。
+- `discover_missing`：只发现当前 `published` 和 `pending_review` 中不存在的新关系实例。适合按关系类型的权威来源全量或半全量发现。
+
+`discover_missing` 的覆盖口径由关系类型文档决定。可枚举来源可返回 `source_exhaustive`；开放来源只能返回 `partial`，即本轮未发现更多不代表全网已经穷尽。
+
 ## 一期关系类型
 
 - `team_home_arena` 球队主场馆

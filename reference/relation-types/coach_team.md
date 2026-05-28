@@ -10,6 +10,12 @@
 Coach -> Team
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` for current head coaches only when every current official team coaching page is checked.
+- Current full coaching staffs are less stable and page structures vary; mark coverage as `partial` unless the source set is explicitly bounded and fully checked.
+- Historical coaching relationships should default to `partial` unless the task provides a complete, bounded historical source.
+
 ## Scope
 
 - 一期优先主教练或明确官方教练组成员。

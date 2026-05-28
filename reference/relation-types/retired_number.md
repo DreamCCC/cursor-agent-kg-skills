@@ -10,6 +10,12 @@
 Player -> Team
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` when all official team retired-number pages or team history pages in the current bounded team set are checked.
+- Exclude honored-only numbers unless the source explicitly states the number is officially retired.
+- Do not assume a fixed team count; derive the team set from current official sources.
+
 ## Scope
 
 - 只抽取球队正式退役号码。

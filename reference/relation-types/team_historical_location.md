@@ -10,6 +10,12 @@
 Team -> City
 ```
 
+## Discovery Coverage
+
+- `discover_missing` can use `source_exhaustive` for teams whose complete franchise history pages or Basketball Reference franchise index entries are fully checked.
+- If only current team pages or partial history sources are available, coverage must be `partial`.
+- Do not duplicate `team_predecessor`; this relation captures location, not historical team-name identity.
+
 ## Scope
 
 - 用于表达 franchise 搬迁和所在地沿革。

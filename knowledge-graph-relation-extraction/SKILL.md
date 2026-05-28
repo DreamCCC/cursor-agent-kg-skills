@@ -9,6 +9,11 @@ description: Extracts NBA knowledge graph relation candidates for a specific rel
 
 For one `relation_code`, research authoritative sources, compare against existing database triples, and return review-ready relation candidates. Default behavior is read-only research and structured output; do not publish data directly.
 
+The skill supports two primary modes:
+
+- `verify_existing_only`: verify existing triples only. Return `update_candidates`, `conflicts`, and `unchanged`; do not discover or return new triples.
+- `discover_missing`: discover missing triples only. Return `new_candidates` that are absent from both `published` and `pending_review`; do not propose updates for existing triples in this mode.
+
 ## Required References
 
 Read these before running:
@@ -39,17 +44,19 @@ Read these before running:
    - If the reference contains `Acquisition Workflow`, execute that workflow first.
    - Use the generic web search workflow only as fallback or for cross-checking.
 
-4. Acquire evidence.
-   - Follow relation-specific acquisition steps when present, such as reading official PDFs, team roster pages, fixed award history pages, or internal documents.
-   - If no specific workflow exists, search the web using official NBA, team, arena, league, Hall of Fame, Basketball Reference, ESPN, or clearly cited encyclopedia-style sources.
-   - Use secondary sources only when official sources do not cover the fact or to cross-check official data.
+4. Execute the selected mode.
+   - For `verify_existing_only`, iterate over existing baseline triples, verify whether each fact is still valid, and check whether `description`, `properties`, `source_url`, `original_sources`, or entity ids need improvement.
+   - For `discover_missing`, build a source-driven candidate universe from the relation-specific acquisition workflow, diff it against existing `published` and `pending_review` triples, and return only missing triples.
+   - If `discover_missing` uses an exhaustively enumerable source, set coverage as `source_exhaustive`; otherwise set coverage as `partial`.
+   - If no specific workflow exists, use generic official-source web search, but never claim exhaustive coverage.
    - Capture URL, title, snippet, and retrieval date for every claim.
 
 5. Build candidates and diffs.
-   - `new_candidates`: valid triples not present in existing baseline.
-   - `update_candidates`: existing triples whose properties or evidence need improvement.
-   - `conflicts`: web evidence contradicts an existing triple.
-   - `unchanged`: existing triples verified with no action needed.
+   - In `discover_missing`, `new_candidates` are valid triples not present in existing baseline.
+   - In `verify_existing_only`, `update_candidates` are existing triples whose properties, description, evidence, or entity ids need improvement.
+   - In `verify_existing_only`, `conflicts` are existing triples contradicted by stronger evidence or requiring human resolution.
+   - `unchanged` contains existing triples verified with no action needed.
+   - Do not put the same triple in both `new_candidates` and `update_candidates`.
 
 6. Self-check.
    - Validate entity types.
@@ -70,6 +77,9 @@ Read these before running:
 - Do not use vague sources without a URL.
 - Do not use a relation if the evidence only implies it weakly.
 - Do not create duplicate triples that already exist in `published` or `pending_review`.
+- In `discover_missing`, skip existing triples instead of returning them as updates.
+- In `verify_existing_only`, do not return `new_candidates`.
+- If no new triples are found, explain whether the empty result is source-exhaustive or only this run's search found nothing.
 - Do not hide missing endpoint entities; report them explicitly in candidate `entity_resolution`.
 - If source quality is weak, put the item in `conflicts` or `needs_review`, not `new_candidates`.
 
