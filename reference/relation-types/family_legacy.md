@@ -56,3 +56,25 @@ If official sources are unavailable:
 - 不抽取未经权威来源确认的私人关系。
 - 不抽取泛泛的“同乡”“好友”，只处理家庭血缘/亲属关系。
 
+## Estimate Workflow
+
+1. Treat this as an open-ended relation unless the input provides a bounded player list.
+2. For broad runs, estimate a popular/high-value subset rather than all NBA family relations.
+3. Build the subset from famous players, current high-interest players, Hall of Fame profiles, second-generation NBA stories, and heavily reported family relationships.
+4. Query existing `published` and `pending_review` `family_legacy` rows and count unique `Player -> Player` triples.
+5. Cross-check candidate counts with Basketball Reference `Relatives` fields and NBA.com or Hall of Fame profile evidence.
+6. In `estimate.scope_note`, state that broad estimates cover high-value public family relationships, not every historical NBA relative.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Check Basketball Reference `Relatives` field or official NBA/Hall of Fame/team profile evidence.
+3. If a valid row lacks `properties.relationship`, direction notes, or stronger sources, return `update_candidates`.
+4. If the relationship is unsourced, only rumored, or not a family relationship, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 5 for broad popular-scope runs, 10 for a bounded player list.
+- `discover_missing.phase.batch.max_batches`: 20 for popular/high-value scope.
+- `verify_existing_only.phase.batch.batch_size`: 10 because evidence often requires profile-level checking.
+

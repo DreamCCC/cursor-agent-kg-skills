@@ -51,3 +51,25 @@ Team -> Team
 - 不抽取只是简称、昵称或别名的关系；别名放实体 aliases。
 - 不把所在城市变化单独写入本关系，城市沿革使用 `team_historical_location`。
 
+## Estimate Workflow
+
+1. Build the current team set from official NBA teams or database active `Team` entities.
+2. For each team, inspect NBA.com or official team history pages and Basketball Reference Franchise Index `Team Names`.
+3. Count explicit predecessor or historical franchise-name identities, excluding simple aliases and nicknames.
+4. Query existing `published` and `pending_review` `team_predecessor` rows and count unique `Team -> Team` triples.
+5. Cross-check each counted predecessor with at least one official or structured history source.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Confirm that the target is a true predecessor or historical franchise identity, not just a nickname or city.
+3. Use NBA.com team history and Basketball Reference franchise history for cross-checking.
+4. If a valid row lacks season/year range or reason, return `update_candidates`.
+5. If the row should be an alias or `team_historical_location` fact instead, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 10.
+- `discover_missing.phase.batch.max_batches`: 10 for current NBA franchise histories.
+- `verify_existing_only.phase.batch.batch_size`: 20.
+

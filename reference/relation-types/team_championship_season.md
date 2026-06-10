@@ -47,3 +47,25 @@ Team -> Season
 - 不抽取分区冠军、赛区冠军，除非后续扩展关系口径。
 - 不抽取季中锦标赛冠军到本关系。
 
+## Estimate Workflow
+
+1. Use NBA.com history/finals champion pages as the primary count source for championship seasons.
+2. Count one `Team -> Season` fact per NBA championship season in the requested league scope.
+3. Query existing `published` and `pending_review` `team_championship_season` rows and count unique `Team -> Season` triples.
+4. Cross-check champion seasons with Basketball Reference champions page or ESPN NBA history.
+5. Ensure the estimate excludes conference titles, division titles, and in-season tournament titles.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Confirm the champion team and season from NBA.com history/finals pages.
+3. Cross-check series result or finals opponent with Basketball Reference when properties need improvement.
+4. If a valid row lacks `season`, `finals_opponent`, `series_result`, `finals_mvp`, or stronger source evidence, return `update_candidates`.
+5. If the row describes a non-NBA championship or non-championship honor, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 10.
+- `discover_missing.phase.batch.max_batches`: 10 for NBA championship seasons.
+- `verify_existing_only.phase.batch.batch_size`: 20.
+

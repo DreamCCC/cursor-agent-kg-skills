@@ -59,3 +59,27 @@ If team pages are inconsistent:
 - 不抽取临时传闻、候选人、面试对象。
 - 不把球员效力关系误建为执教关系。
 
+## Estimate Workflow
+
+1. Determine whether the requested scope is current head coaches, current full coaching staffs, or historical coaching relationships.
+2. For current head coaches, build the active team set from NBA.com teams directory or database active `Team` entities and estimate one head coach per team.
+3. For current full staffs, count only coaches clearly listed on official team coaching staff pages; mark coverage as partial unless all team staff pages are fully checked.
+4. For historical coaching relationships, use Basketball Reference coach pages or team history pages and state the bounded source set.
+5. Query existing `published` and `pending_review` `coach_team` rows and count unique `Coach -> Team` triples within the same scope.
+6. Cross-check current-season changes with official team announcements or NBA.com news.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. For current rows, confirm the coach and role from official team pages or NBA.com team info.
+3. For historical rows, verify tenure using Basketball Reference or official team history pages.
+4. If a valid row lacks `role`, `start_season`, `end_season`, `is_current`, or stronger evidence, return `update_candidates`.
+5. If a row is based on rumors, candidates, interviews, or player-team service rather than coaching, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 10 for current head coaches, 5 for full staff or historical runs.
+- `discover_missing.phase.batch.max_batches`: 6 for current head coaches, 20 for bounded full staff or historical popular-scope runs.
+- `verify_existing_only.phase.batch.batch_size`: 10 for current-season rows, 20 for historical rows from structured sources.
+- Broad historical coaching discovery should focus on head coaches and heavily reported/high-value coaching relationships first.
+

@@ -58,3 +58,25 @@ If the official PDF cannot be read:
 - 不抽取某场比赛由谁执裁，这属于高频赛程事件。
 - 不抽取未经官方确认的裁判员传闻或媒体推测。
 
+## Estimate Workflow
+
+1. Use the official NBA Officials Guide PDF as the primary count source for the requested season and league.
+2. Count staff and non-staff officials from the official list; keep the count source URL and page/section in `estimate.validation.sources_checked`.
+3. Query existing `published` and `pending_review` `referee_officiate` rows and count unique `Referee -> League` triples for the same league/season when season data is available.
+4. Cross-check the official count with official.nba.com staff pages or PDF profile sections when available.
+5. Recommended estimate should include `estimated_total`, `existing_count`, `estimated_missing`, and notes explaining any difference between official count and database count.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Check that each referee remains supported by the official staff/non-staff list for the claimed season and league.
+3. If the triple is valid but lacks `season`, `role`, `staff_list_url`, or official source snippets, return `update_candidates`.
+4. If a row appears to describe a single-game assignment rather than staff-list membership, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.estimate`: source-exhaustive is allowed only for a bounded season and league.
+- `discover_missing.phase.batch.max_candidates`: 5.
+- `discover_missing.phase.batch.max_batches`: 20 for current NBA staff/non-staff lists.
+- `verify_existing_only.phase.batch.batch_size`: 20.
+

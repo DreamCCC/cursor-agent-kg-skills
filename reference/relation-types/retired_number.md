@@ -50,3 +50,24 @@ Player -> Team
 - 不抽取“球员穿过某号码”，那不是退役号码。
 - 不抽取未正式退役、只是暂停使用或传闻中的号码。
 
+## Estimate Workflow
+
+1. Build the current team set from NBA.com teams directory or database active `Team` entities.
+2. For each team, locate official NBA.com or team-site retired number pages and count officially retired player-number facts.
+3. Query existing `published` and `pending_review` `retired_number` rows and count unique `Player -> Team` triples, using `properties.number` to identify duplicate jersey facts when available.
+4. Cross-check high-value or ambiguous teams with Basketball Reference or another reputable history page.
+5. Exclude honored-only numbers from the estimate unless the source explicitly states the number is officially retired.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Confirm the player, team, and retired number from official retired-number pages when available.
+3. If a valid row lacks `number`, `retired_date`, `ceremony_date`, or stronger source evidence, return `update_candidates`.
+4. If the row describes a worn number, honored number, or rumored retirement rather than an official retired number, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 10 for bounded team pages.
+- `discover_missing.phase.batch.max_batches`: 30 for all current NBA teams.
+- `verify_existing_only.phase.batch.batch_size`: 20.
+

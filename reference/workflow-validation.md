@@ -50,3 +50,20 @@
 4. 对页面结构差异大的关系类型，优先输出少量高置信候选，不要强行覆盖全量。
 5. 如果官方网页整页抓取超时，可以使用搜索结果片段或站内页面摘要定位事实，但最终证据仍需记录到具体 URL。
 
+## Phase Smoke Test 建议
+
+每个关系类型上线前至少验证以下阶段：
+
+1. `discover_missing phase=estimate`
+   - 只返回 `estimate`，不返回候选。
+   - 说明主权威来源、数据库已有唯一关系数、辅助来源或预期范围。
+   - 对大量关系类型，明确热门覆盖口径，不承诺全历史全量。
+2. `discover_missing phase=batch`
+   - 传入小的 `max_candidates`，例如 5。
+   - 只返回当前库中不存在的 `new_candidates`。
+   - 每条候选包含实体解析、证据、置信度和去重键。
+3. `verify_existing_only phase=batch`
+   - 传入一小批 `relation_ids`。
+   - 只验证这批关系，不扩展到其他存量关系。
+   - 只返回 `update_candidates`、`conflicts`、`unchanged_examples`。
+

@@ -67,3 +67,27 @@ If NBA.com pages are incomplete:
 - 不抽取媒体自行评选或非官方榜单。
 - 名人堂入选放在本关系内，不单独建关系类型。
 
+## Estimate Workflow
+
+1. First determine the requested honor scope. If the request is broad, scope the estimate to high-value honors only: MVP, Finals MVP, DPOY, Rookie of the Year, All-NBA Team, NBA Champion, and Hall of Fame.
+2. Use NBA.com award/history pages and the Hall of Fame official site as primary count sources for bounded award families.
+3. Cross-check award winners and seasons with Basketball Reference award pages or ESPN history pages.
+4. Query existing `published` and `pending_review` `win_honor` rows and count unique `Player/Team -> Award` triples within the same bounded honor scope when possible.
+5. If the estimated universe is large, do not attempt full historical coverage. Set `estimate.scope_note` to explain the popular/high-value subset, for example famous players, championship teams, and heavily reported awards.
+6. Estimate must clearly state which award families are included and which are excluded.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Check whether each award fact is supported by NBA.com, the Hall of Fame official site, Basketball Reference, or another authoritative history page.
+3. If the fact is valid but lacks `season`, `year`, `award_level`, stronger source URL, or original sources, return `update_candidates`.
+4. If the row uses an overly broad or non-official award entity, return `conflicts` with a normalization recommendation.
+
+## Run Policy
+
+- `discover_missing.phase.estimate`: strict cross-checking is required because this relation can become very large.
+- `discover_missing.phase.batch.max_candidates`: 5 for broad or popular-scope runs; 10 only for a single bounded award family.
+- `discover_missing.phase.batch.max_batches`: 20 for popular/high-value scope; use repeated manual runs if more coverage is desired.
+- `verify_existing_only.phase.batch.batch_size`: 10 for rows needing web verification, 20 for rows from structured award pages.
+- For broad runs, prioritize famous players, championship teams, MVP/FMVP winners, Hall of Fame inductees, and heavily reported honors rather than full historical coverage.
+

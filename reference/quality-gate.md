@@ -14,14 +14,27 @@
 ## 模式检查
 
 - `verify_existing_only` 只核验已有关系，不输出 `new_candidates`。
+- `verify_existing_only phase=plan` 只输出 `verify_plan`，不得输出任何候选。
+- `verify_existing_only phase=batch` 只验证输入 `relation_ids` 对应的关系。
 - `verify_existing_only` 中，说明、属性、证据或实体 ID 补强进入 `update_candidates`。
 - `verify_existing_only` 中，强证据与现有事实矛盾进入 `conflicts`。
 - `discover_missing` 只输出 `published` 和 `pending_review` 中都不存在的新三元组。
+- `discover_missing phase=estimate` 只输出 `estimate` 和策略建议，不输出任何候选。
+- `discover_missing phase=batch` 才输出 `new_candidates`，并遵守 `max_candidates`。
 - `discover_missing` 中，如果发现已有三元组的更好证据，跳过该项，留给 `verify_existing_only`。
 - `discover_missing` 中，`update_candidates`、`conflicts`、`unchanged_examples` 必须为空数组。
 - `discover_missing` 中，已有关系的问题只能写入 `self_check.notes` 或 `coverage.notes`，不得作为候选返回。
 - `discover_missing` 返回空时，必须说明是 `source_exhaustive_empty` 还是 `search_exhausted_empty`。
 - 开放关系或不可完整枚举来源不得声明 `source_exhaustive`。
+
+## Estimate 检查
+
+- `discover_missing phase=estimate` 必须严格交叉验证预计数量。
+- 估算必须说明主权威来源、数据库已有唯一关系数、辅助来源或关系类型预期范围。
+- `estimate.estimated_missing` 必须基于 `estimated_total - existing_count`，如不是这个公式，必须在 notes 中解释。
+- 大量关系类型不要求全量覆盖；Agent 应自行收窄到热门球员、热门球队、报道较多或问答价值最高的范围。
+- 对热门覆盖场景，必须在 `estimate.scope_note` 和 `coverage.notes` 中说明不是全历史全量。
+- `recommended_run_policy.max_batches` 是后端连续 batch 的安全上限，不代表事实总量已经完全确定。
 
 ## 证据检查
 
@@ -43,6 +56,7 @@
 - 输出是合法 JSON。
 - `relation_code` 与任务输入一致。
 - `run_mode` 与任务输入一致。
+- 如果输入包含 `phase`，输出 `phase` 必须一致。
 - 输出包含 `coverage`，说明来源覆盖状态。
 - 每条候选包含实体类型、实体名称、关系类型、证据、置信度。
 - 每条候选包含 `entity_resolution`。

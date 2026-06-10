@@ -32,6 +32,17 @@ cursor-agent-kg-skills/
 
 `discover_missing` 的覆盖口径由关系类型文档决定。可枚举来源可返回 `source_exhaustive`；开放来源只能返回 `partial`，即本轮未发现更多不代表全网已经穷尽。
 
+## 内部执行阶段
+
+后端仍只需要选择上面的两个运行模式，但调用 Agent 时可以传入内部 `phase`：
+
+- `discover_missing phase=estimate`：只估算候选规模、已有数量、缺失数量和推荐运行策略，不返回候选，不写库。
+- `discover_missing phase=batch`：按 `max_candidates` 返回本批新增候选；每次都重新查询 `published` 和 `pending_review` 去重。
+- `verify_existing_only phase=plan`：规划或核对存量验证批次，不返回候选。
+- `verify_existing_only phase=batch`：只验证输入 `relation_ids` 对应的已有关系。
+
+对 `win_honor`、`endorsement` 等关系量很大的类型，Agent 不需要追求全历史全量。应优先覆盖热门球员、热门球队、报道较多或问答价值最高的关系，并在 `estimate.scope_note` 和 `coverage.notes` 中说明覆盖口径。
+
 ## 一期关系类型
 
 - `team_home_arena` 球队主场馆

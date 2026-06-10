@@ -52,3 +52,25 @@ Team -> Arena
 - 训练馆、临时比赛地、中立场不算主场馆。
 - 不要把城市建成目标实体，城市使用 `arena_location`。
 
+## Estimate Workflow
+
+1. Build the current team universe from the current NBA.com teams directory or database active `Team` entities.
+2. Count the current active teams from that source; do not hardcode 30 as a permanent invariant.
+3. Query existing `published` and `pending_review` `team_home_arena` rows and count unique `Team -> Arena` triples.
+4. Cross-check arena counts with NBA.com arena-by-team pages, team info pages, or team official pages.
+5. If historical home arenas are requested, estimate only for the bounded franchise/source set and mark coverage as partial unless all franchise histories are fully checked.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Cross-check each team-arena fact with NBA.com team info pages and a team or arena official source when possible.
+3. If a current home arena fact is valid but lacks `is_current`, `start_season`, or stronger official source evidence, return `update_candidates`.
+4. If a row points to a training facility, neutral site, temporary venue, or city entity, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 10 for current active teams.
+- `discover_missing.phase.batch.max_batches`: 6 for current active teams.
+- `verify_existing_only.phase.batch.batch_size`: 20.
+- Historical home arenas should be run only with a bounded source set and explicit scope notes.
+

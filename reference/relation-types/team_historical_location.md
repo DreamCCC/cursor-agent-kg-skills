@@ -52,3 +52,24 @@ Team -> City
 - 不把主场馆所在地写到本关系，场馆城市使用 `arena_location`。
 - 不抽取短期临时比赛地或中立场城市。
 
+## Estimate Workflow
+
+1. Build the current team set from official NBA teams or database active `Team` entities.
+2. For each franchise, use NBA.com team history pages and Basketball Reference Franchise Index to identify city/location periods.
+3. Count explicit franchise city/location periods, excluding temporary venues and neutral sites.
+4. Query existing `published` and `pending_review` `team_historical_location` rows and count unique `Team -> City` triples.
+5. Cross-check relocations with at least two sources when the official page is vague.
+
+## Verify Workflow
+
+1. Verify only the input `relation_ids`.
+2. Confirm each team-city historical period with official team history or Basketball Reference franchise history.
+3. If a valid row lacks `start_year`, `end_year`, `start_season`, `end_season`, or `is_current`, return `update_candidates`.
+4. If the row represents arena city, temporary venue city, or a predecessor team identity rather than location, return `conflicts`.
+
+## Run Policy
+
+- `discover_missing.phase.batch.max_candidates`: 10.
+- `discover_missing.phase.batch.max_batches`: 12 for current NBA franchise histories.
+- `verify_existing_only.phase.batch.batch_size`: 20.
+
